@@ -1,14 +1,17 @@
 import React, { useState } from "react";
+import { useDispatchTodos } from "../context/TodoContext";
 
-export const Item = ({ todo, complete, updateTodo }) => {
+export const Item = ({ todo }) => {
   const [editingContent, setEditingContent] = useState(todo.content);
+
+  const dispach = useDispatchTodos();
 
   const editMode = () => {
     const newTodo = {
       ...todo,
       editing: !todo.editing,
     };
-    updateTodo(newTodo);
+    dispach({ type: "todo/update", todo: newTodo });
   };
 
   const confirmContent = (e) => {
@@ -18,7 +21,11 @@ export const Item = ({ todo, complete, updateTodo }) => {
       content: editingContent,
       editing: !todo.editing,
     };
-    updateTodo(newTodo);
+    dispach({ type: "todo/update", todo: newTodo });
+  };
+
+  const complete = (todo) => {
+    dispach({ type: "todo/delete", todo: todo });
   };
 
   return (
@@ -37,7 +44,7 @@ export const Item = ({ todo, complete, updateTodo }) => {
           )}
         </span>
       </form>
-      <button onClick={() => complete(todo.id)}>完了</button>
+      <button onClick={() => complete(todo)}>完了</button>
     </div>
   );
 };
